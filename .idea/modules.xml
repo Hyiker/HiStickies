@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HiStickies.iml" filepath="$PROJECT_DIR$/.idea/modules/HiStickies.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HiStickies_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HiStickies_main.iml" group="HiStickies" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HiStickies_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HiStickies_test.iml" group="HiStickies" />
+    </modules>
+  </component>
+</project>
