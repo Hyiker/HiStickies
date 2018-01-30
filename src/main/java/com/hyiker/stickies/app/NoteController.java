@@ -17,7 +17,7 @@ public class NoteController extends MyFrame {
     private static NoteController instance = new NoteController();
     private final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width,
             SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-    private String save_path = this.getClass().getClassLoader().getResource("save.json").getPath();
+    private String save_path = "/Users/sidhch/JavaData/data.json";
     private static final String introduce = "双击锁定/解锁\n双击长按" + ((float) (MyTextArea.close_delay / 1000)) + "秒关闭\n可拖动左上角或者右下角改变大小";
 
     public static void main(String[] args) {
@@ -45,11 +45,11 @@ public class NoteController extends MyFrame {
 
 
     private void createNote(int x, int y, int w, int h, String text) {
-        createNote(null, x, y, w, h, text);
+        createNote(null, x, y, w, h, text, true);
     }
 
-    private void createNote(String id, int x, int y, int w, int h, String text) {
-        noteList.add(new Note(id, x, y, 0, 0, text));
+    private void createNote(String id, int x, int y, int w, int h, String text, Boolean visible) {
+        noteList.add(new Note(id, x, y, w, h, text, visible));
     }
 
     private void createNotes(JSONArray data) {
@@ -60,7 +60,11 @@ public class NoteController extends MyFrame {
         for (Object o : data) {
             JSONObject d = (JSONObject) o;
             JSONArray a = (JSONArray) d.get("bounds");
-            createNote((String) d.get("id"), (int) a.get(0), (int) a.get(1), (int) a.get(2), (int) a.get(3), (String) d.get("text"));
+            Boolean visible = (Boolean) d.get("visible");
+            if (visible == null) {
+                visible = true;
+            }
+            createNote((String) d.get("id"), (int) a.get(0), (int) a.get(1), (int) a.get(2), (int) a.get(3), (String) d.get("text"), visible);
         }
 
     }
@@ -88,6 +92,7 @@ public class NoteController extends MyFrame {
                 note.put("bounds", bounds);
                 note.put("text", n.getTa().getText());
                 note.put("date", System.currentTimeMillis());
+                note.put("visible", n.isVisible());
                 data.add(note);
             }
         }
@@ -149,5 +154,13 @@ public class NoteController extends MyFrame {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void setVisibleForAll(boolean visibleForAll) {
+        for (Note n : noteList) {
+            if (n != null) {
+                n.setVisible(visibleForAll);
+            }
+        }
     }
 }

@@ -36,14 +36,14 @@ public class Note extends MyFrame {
     }
 
     public Note() {
-        this(null, 0, 0, 0, 0, "");
+        this(null, 0, 0, 0, 0, "", true);
     }
 
     public Note(String basic) {
-        this(null, 0, 0, 0, 0, basic);
+        this(null, 0, 0, 0, 0, basic, true);
     }
 
-    public Note(String id, int x, int y, int w, int h, String basic) {
+    public Note(String id, int x, int y, int w, int h, String basic, Boolean visible) {
         //生成Note的ID
 
         if (id == null) {
@@ -70,7 +70,10 @@ public class Note extends MyFrame {
         setResizable(true);
 
         getContentPane().add(ta);
-        setVisible(true);
+        if (visible == null) {
+            visible = true;
+        }
+        setVisible(visible);
     }
 
     private MyTextArea createTextArea(String b, String id) {

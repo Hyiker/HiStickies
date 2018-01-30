@@ -2,6 +2,10 @@ group 'com.hyiker.stickies'
 version '1.0.0-RELEASE'
 
 apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+mainClassName = "com.hyiker.stickies.app.NoteController"
+
 
 sourceCompatibility = 1.8
 
@@ -13,4 +17,14 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/com.alibaba/fastjson
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.45'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
