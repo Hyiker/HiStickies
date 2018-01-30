@@ -49,7 +49,6 @@ public class Note extends MyFrame {
         if (id == null) {
             id = NoteController.getUUID();
         }
-        System.out.println(id);
         this.id = id;
         w = w == 0 ? DEFAULT_WIDTH : w;
         h = h == 0 ? DEFAULT_HEIGHT : h;
