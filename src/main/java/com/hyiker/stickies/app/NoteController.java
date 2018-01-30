@@ -24,6 +24,7 @@ public class NoteController extends MyFrame {
         instance.init();
     }
 
+    //
     private NoteController() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::end));
     }
