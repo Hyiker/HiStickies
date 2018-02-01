@@ -52,7 +52,7 @@ class MyFrame extends JFrame {
                     nc.instantiateRandomNote();
                     break;
                 case "退出":
-                    NoteController.getInstance().end();
+                    NoteController.getInstance().shutdown();
                     System.exit(-1);
                     break;
                 case "隐藏所有窗口":

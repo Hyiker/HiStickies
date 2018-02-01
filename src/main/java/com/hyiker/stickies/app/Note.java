@@ -1,5 +1,7 @@
 package com.hyiker.stickies.app;
 
+import com.hyiker.stickies.app.model.NoteData;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,7 +20,7 @@ public class Note extends MyFrame {
     static final int DEFAULT_HEIGHT = 210,
             DEFAULT_WIDTH = 360,
             MIN_HEIGHT = 100,
-            MIN_WIDTH = 100, MARGIN = 5;
+            MIN_WIDTH = 100, MARGIN = 5, DEFAULT_X = 20, DEFAULT_Y = 80;
 
     private String id;
     public int RESIZE_STATUS = 0;
@@ -26,6 +28,8 @@ public class Note extends MyFrame {
 
     private Point window_origin_position, mouse_origin_position;
     private Dimension window_origin_size;
+    private static final String BASIC_TEXT = "双击锁定/解锁\n双击长按" + ((float) (MyTextArea.close_delay / 1000)) + "秒关闭\n可拖动左上角或者右下角改变大小";
+
 
     public String getId() {
         return id;
@@ -36,23 +40,28 @@ public class Note extends MyFrame {
     }
 
     public Note() {
-        this(null, 0, 0, 0, 0, "", true);
+        this(null, new Rectangle(DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true);
     }
 
-    public Note(String basic) {
-        this(null, 0, 0, 0, 0, basic, true);
+    public Note(int x, int y) {
+        this(null, new Rectangle(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true);
     }
 
-    public Note(String id, int x, int y, int w, int h, String basic, Boolean visible) {
+    public Note(NoteData data) {
+        this(data.getId(), data.getBounds(), data.getText(), data.getVisibility());
+    }
+
+    public Note(String id, Rectangle ra, String basic, Boolean visible) {
         //生成Note的ID
 
         if (id == null) {
             id = NoteController.getUUID();
         }
         this.id = id;
-        w = w == 0 ? DEFAULT_WIDTH : w;
-        h = h == 0 ? DEFAULT_HEIGHT : h;
-        setBounds(x, y, w, h);
+        if (ra == null) {
+            ra = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        }
+        setBounds(ra);
         setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
         //无边框
         setUndecorated(true);
@@ -123,6 +132,16 @@ public class Note extends MyFrame {
         t.start();
     }
 
+    public NoteData getNoteData() {
+        NoteData nd = new NoteData();
+        nd.setId(this.getId());
+        nd.setBounds(this.getBounds());
+        nd.setFont(ta.getFont().getFontName());
+        nd.setFont_size(ta.getFont().getSize());
+        nd.setVisibility(this.isVisible());
+        nd.setText(ta.getText());
+        return nd;
+    }
 
     private class DragAdapter extends MouseAdapter implements Serializable {
 
