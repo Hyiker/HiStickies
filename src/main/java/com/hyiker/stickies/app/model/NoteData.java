@@ -1,10 +1,9 @@
 package com.hyiker.stickies.app.model;
 
-import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -86,6 +85,13 @@ public class NoteData {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        String str = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            str = mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return str;
     }
 }

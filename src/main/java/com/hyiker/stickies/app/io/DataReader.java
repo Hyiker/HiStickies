@@ -1,12 +1,12 @@
 package com.hyiker.stickies.app.io;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyiker.stickies.app.Note;
 import com.hyiker.stickies.app.model.DataStorage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
