@@ -21,6 +21,24 @@ public class NoteData {
     private String font;
     private String text;
     private Boolean visibility;
+    private Boolean is_locked;
+    private Integer scroll_position;
+
+    public Boolean getIs_locked() {
+        return is_locked;
+    }
+
+    public void setIs_locked(Boolean is_locked) {
+        this.is_locked = is_locked;
+    }
+
+    public Integer getScroll_position() {
+        return scroll_position;
+    }
+
+    public void setScroll_position(Integer scroll_position) {
+        this.scroll_position = scroll_position;
+    }
 
     public String getId() {
         return id;

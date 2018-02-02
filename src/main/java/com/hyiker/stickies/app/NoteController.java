@@ -15,7 +15,7 @@ import java.util.List;
 public class NoteController extends MyFrame {
     private List<Note> noteList;
     private static NoteController instance = new NoteController();
-    private static DataReader reader;
+    private DataReader reader;
     private final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width,
             SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
     private String save_path = "/Users/sidhch/JavaData/data.json";
@@ -26,7 +26,10 @@ public class NoteController extends MyFrame {
 
     /*<-- Controller concerned functions start -->*/
     private NoteController() {
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("on shutdown()");
+            shutdown();
+        }));
     }
 
     private void init() {
@@ -132,9 +135,7 @@ public class NoteController extends MyFrame {
 
 
     /*<-- util functions start -->*/
-    public static String getUUID() {
-        return UUID.randomUUID().toString();
-    }
+
     /*<-- util functions end -->*/
 
 

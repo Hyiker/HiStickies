@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
  */
 class MyFrame extends JFrame {
 
-    private static final long serialVersionUID = -5084820520550046468L;
 
     void setUpMenu() {
         //针对苹果的菜单设置

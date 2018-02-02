@@ -1,16 +1,20 @@
 package com.hyiker.stickies.app;
 
 import com.hyiker.stickies.app.model.NoteData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * 由sidhch于2018/1/27创建
  */
 public class Note extends MyFrame {
+    private static final Logger logger = LoggerFactory.getLogger(Note.class);
     /**
      * 便签对象
      * 每个便签独立存在，由NoteController管理
@@ -20,7 +24,7 @@ public class Note extends MyFrame {
     static final int DEFAULT_HEIGHT = 210,
             DEFAULT_WIDTH = 360,
             MIN_HEIGHT = 100,
-            MIN_WIDTH = 100, MARGIN = 5, DEFAULT_X = 20, DEFAULT_Y = 80;
+            MIN_WIDTH = 100, MARGIN = 3, DEFAULT_X = 20, DEFAULT_Y = 80, BOARD_DISTANCE = 15;
 
     private String id;
     public int RESIZE_STATUS = 0;
@@ -28,6 +32,8 @@ public class Note extends MyFrame {
 
     private Point window_origin_position, mouse_origin_position;
     private Dimension window_origin_size;
+    private DragAdapter da;
+    private Resizer resizer;
     private static final String BASIC_TEXT = "双击锁定/解锁\n双击长按" + ((float) (MyTextArea.close_delay / 1000)) + "秒关闭\n可拖动左上角或者右下角改变大小";
 
 
@@ -40,22 +46,23 @@ public class Note extends MyFrame {
     }
 
     public Note() {
-        this(null, new Rectangle(DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true);
+        this(null, new Rectangle(DEFAULT_X, DEFAULT_Y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true, false, 0);
     }
 
     public Note(int x, int y) {
-        this(null, new Rectangle(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true);
+        this(null, new Rectangle(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT), BASIC_TEXT, true, false, 0);
     }
 
     public Note(NoteData data) {
-        this(data.getId(), data.getBounds(), data.getText(), data.getVisibility());
+
+        this(data.getId(), data.getBounds(), data.getText(), data.getVisibility() == null ? false : data.getVisibility(), data.getIs_locked(), data.getScroll_position());
     }
 
-    public Note(String id, Rectangle ra, String basic, Boolean visible) {
+    public Note(String id, Rectangle ra, String basic, Boolean visible, Boolean is_locked, Integer scroll_position) {
         //生成Note的ID
 
         if (id == null) {
-            id = NoteController.getUUID();
+            id = UUID.randomUUID().toString();
         }
         this.id = id;
         if (ra == null) {
@@ -73,39 +80,55 @@ public class Note extends MyFrame {
         setUpMenu();
 
         //设置TextPanel的显示
-        ta = createTextArea(basic, id);
+        ta = createTextArea(basic, id, is_locked == null ? false : is_locked, scroll_position == null ? 0 : scroll_position);
         setDragEnable(true);
         setResizable(true);
 
         getContentPane().add(ta);
-        if (visible == null) {
-            visible = true;
-        }
-        setVisible(visible);
+        //System.out.println("=======");
+
+        //防止死锁...
+        // TODO: 2018/2/2 搞懂这里的原理.. DEBUG了好久才找出来
+        SwingUtilities.invokeLater(() -> setVisible(visible));
     }
 
-    private MyTextArea createTextArea(String b, String id) {
-        MyTextArea mta = new MyTextArea(20, getHeight(), id);
-        mta.setLocation(0, 0);
-        mta.setSize(getWidth() + MARGIN, getHeight() + MARGIN);
+    private MyTextArea createTextArea(String b, String id, boolean is_locked, int scroll_position) {
+        MyTextArea mta = new MyTextArea(20, getWidth() + MARGIN, getHeight() + MARGIN, id, is_locked, scroll_position);
+        mta.setLocation(-2, -2);
         mta.setText(b);
-        mta.setFont(new Font("微软雅黑", Font.PLAIN, 20));
+        mta.setTextFont(new Font("微软雅黑", Font.PLAIN, 20));
         return mta;
     }
 
     public void setDragEnable(boolean e) {
         if (e) {
+            if (da == null) {
+                da = new DragAdapter();
+            }
             //ta被禁用后窗体可以被拖拽
-            ta.addMouseListener(new DragAdapter());
-            ta.addMouseMotionListener(new DragAdapter());
+            ta.getTextPane().addMouseListener(da);
+            ta.getTextPane().addMouseMotionListener(da);
+        } else {
+            if (da != null) {
+                ta.removeMouseMotionListener(da);
+                ta.removeMouseListener(da);
+            }
         }
     }
 
     @Override
     public void setResizable(boolean resizable) {
         if (resizable) {
-            ta.addMouseListener(new Resizar());
-            ta.addMouseMotionListener(new Resizar());
+            if (resizer == null) {
+                resizer = new Resizer();
+            }
+            ta.getTextPane().addMouseListener(resizer);
+            ta.getTextPane().addMouseMotionListener(resizer);
+        } else {
+            if (resizer != null) {
+                ta.removeMouseListener(resizer);
+                ta.removeMouseMotionListener(resizer);
+            }
         }
     }
 
@@ -140,13 +163,13 @@ public class Note extends MyFrame {
         nd.setFont_size(ta.getFont().getSize());
         nd.setVisibility(this.isVisible());
         nd.setText(ta.getText());
+        nd.setIs_locked(ta.is_locked());
+        nd.setScroll_position(ta.getVerticalScrollBar().getValue());
         return nd;
     }
 
-    private class DragAdapter extends MouseAdapter implements Serializable {
+    private class DragAdapter extends MouseAdapter {
 
-
-        private static final long serialVersionUID = -5730465985313226745L;
 
         @Override
         public void mousePressed(MouseEvent e) {
@@ -166,9 +189,7 @@ public class Note extends MyFrame {
         }
     }
 
-    private class Resizar extends MouseAdapter implements Serializable {
-        private static final long serialVersionUID = 1343918047348470267L;
-        private final int BOARD_DISTANCE = 10;
+    private class Resizer extends MouseAdapter {
         private int newX, newY, newWidth, newHeight;
         private Point mouse_position;
 

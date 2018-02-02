@@ -1,5 +1,3 @@
-import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyiker.stickies.app.io.DataReader;
 import com.hyiker.stickies.app.model.DataStorage;
@@ -10,8 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 由sidhch于2018/2/1创建
