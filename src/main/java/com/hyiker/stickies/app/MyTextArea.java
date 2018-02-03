@@ -5,7 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,7 +21,9 @@ class MyTextArea extends JScrollPane {
     private String note_id;
     boolean is_locked;
     static int close_delay = 1500;
-    private final String IMAGE_FILE_NAME = this.getClass().getClassLoader().getResource("assets/imgs/lock.png").getPath();
+    // 如果使用getPath()，用File对象新建图片对象，会导致无法从Jar包中获取文件()
+    // File类无法解析文件中的对象
+    private final URL IMAGE_FILE_NAME = this.getClass().getClassLoader().getResource("assets/imgs/lock.png");
     private JTextPane textPane;
     private MyJLabel locker;
     private int orgY;
@@ -139,7 +145,7 @@ class MyTextArea extends JScrollPane {
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            logger.info("clickcount===" + e.getClickCount());
+            //logger.info("clickcount===" + e.getClickCount());
             has_released = true;
         }
     }
