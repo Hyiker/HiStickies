@@ -1,8 +1,7 @@
 package com.hyiker.stickies.app.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyiker.stickies.app.model.basic.BasicModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 /**
  * 由sidhch于2018/2/1创建
  */
-public class DataStorage {
+public class DataStorage extends BasicModel {
     @JsonProperty("notes")
     private List<NoteData> noteData;
 
@@ -29,15 +28,4 @@ public class DataStorage {
         noteData.add(nd);
     }
 
-    @Override
-    public String toString() {
-        String str = null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            str = mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return str;
-    }
 }

@@ -1,5 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyiker.stickies.app.io.DataReader;
+import com.hyiker.stickies.app.io.JSONDataHandler;
 import com.hyiker.stickies.app.model.DataStorage;
 import com.hyiker.stickies.app.model.NoteData;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class NoteDataTest {
 
     @Test
     public void read() {
-        DataReader dr = new DataReader();
+        JSONDataHandler dr = new JSONDataHandler();
         try {
             System.out.println(dr.readNotesData());
         } catch (IOException e) {

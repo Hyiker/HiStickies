@@ -16,4 +16,5 @@ HiStickies for Mac SNAPSHOT-0.0.1
 ### 待实现:
 * 自适应
 * 样式改变
+* 使用JSON管理列表
 * 更多设置...

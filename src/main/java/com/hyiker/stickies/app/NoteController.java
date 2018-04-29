@@ -1,13 +1,17 @@
 package com.hyiker.stickies.app;
 
-import com.hyiker.stickies.app.io.DataReader;
+import com.bulenkov.darcula.DarculaLaf;
+import com.hyiker.stickies.app.io.JSONDataHandler;
 import com.hyiker.stickies.app.model.DataStorage;
 import com.hyiker.stickies.app.model.NoteData;
 
+import javax.swing.*;
 import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  * 由sidhch于2018/1/27创建
@@ -15,12 +19,14 @@ import java.util.List;
 public class NoteController extends MyFrame {
     private List<Note> noteList;
     private static NoteController instance = new NoteController();
-    private DataReader reader;
+    private JSONDataHandler reader;
     private final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width,
             SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-    private String save_path = "/Users/sidhch/JavaData/data.json";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+        //针对苹果的菜单设置
+        System.setProperty("apple.laf.useScreenMenuBar", "true");
+        UIManager.setLookAndFeel(new DarculaLaf());
         instance.init();
     }
 
@@ -35,7 +41,7 @@ public class NoteController extends MyFrame {
     private void init() {
         DataStorage data;
         noteList = new ArrayList<>();
-        reader = new DataReader();
+        reader = new JSONDataHandler();
         try {
             data = reader.readNotesData();
         } catch (IOException e) {
@@ -44,6 +50,7 @@ public class NoteController extends MyFrame {
 
         createNotes(data);
         setUpMenu();
+
         setUndecorated(true);
         setVisible(true);
     }

@@ -2,8 +2,7 @@ package com.hyiker.stickies.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hyiker.stickies.app.model.basic.BasicModel;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -11,7 +10,7 @@ import java.util.Arrays;
 /**
  * 由sidhch于2018/2/1创建
  */
-public class NoteData {
+public class NoteData extends BasicModel {
     private String id;
     @JsonProperty("bounds")
     private Integer[] bounds_array;
@@ -101,15 +100,5 @@ public class NoteData {
         this.visibility = visibility;
     }
 
-    @Override
-    public String toString() {
-        String str = null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            str = mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return str;
-    }
+
 }

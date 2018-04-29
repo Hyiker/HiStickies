@@ -1,0 +1,31 @@
+[
+  {
+    "name": "基础操作",
+    "function": null,
+    "init": null,
+    "children": [
+      {
+        "name": "创建新的便签",
+        "function": "createNote",
+        "init": null,
+        "children": null
+      },
+      {
+        "name": "退出",
+        "function": "exit",
+        "init": null,
+        "children": null
+      }
+    ]
+  },
+  {
+    "name": "展示",
+    "function": null,
+    "init": "showNotes",
+    "children": [
+      {
+        "name": "隐藏所有"
+      }
+    ]
+  }
+]
